@@ -2,7 +2,7 @@
 
 let Webin = {};
 
-Webin.bind = function(_params) {
+Webin.Bind = function(_params) {
     const self = this;
 
     /* element: target element object */

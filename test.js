@@ -1,6 +1,6 @@
 //  test.js
 
-window.onload = function() {
+function run() {
 
     let element = document.getElementsByClassName('prototype')[0];
     let params  = JSON.parse(document.getElementById('params').value);

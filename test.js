@@ -6,7 +6,7 @@ function run() {
     let params  = JSON.parse(document.getElementById('params').value);
     console.log('params:', params);
 
-    let output = document.getElementById('outputs');
+    let output = document.getElementById('output');
 
     output.removeChild(output.firstChild);
     output.appendChild(new Webin.Bind(params).to(element));

@@ -17,9 +17,13 @@ Webin.Bind = function(_params) {
     };
 
     self.toText = function(text) {
-        console.log('置換前:', text);
+        console.log('Before:', text);
+        if(!text.trim()){
+            console.log('Skip...');
+            return text;
+        }
         let ret = text.replace(self.params_pattern, self.getParams);
-        console.log('置換後:', ret);
+        console.log('After:', ret);
         return ret;
     };
 

@@ -2,11 +2,14 @@
 
 function run() {
 
-    let element = document.getElementsByClassName('prototype')[0];
+    let element = document.getElementById('prototypes').getElementsByClassName('prototype')[0];
     let params  = JSON.parse(document.getElementById('params').value);
     console.log('params:', params);
 
-    document.body.appendChild(new Webin.Bind(params).to(element));
+    let output = document.getElementById('outputs');
+
+    output.removeChild(output.firstChild);
+    output.appendChild(new Webin.Bind(params).to(element));
     console.log('Done.');
 
 };

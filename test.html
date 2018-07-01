@@ -7,29 +7,28 @@
     </HEAD>
     <BODY>
     <textarea id="params" placeholder="ここにパラメータをJSON形式で入力...">{
-        "date":"20180523",
-        "time":"1745",
-        "title":"ここがタイトルです",
-        "contents":"内容ですね、QWERTYUIOP"
-    }</textarea>
+            "date":"でいと",
+            "datetime":"でいとたいむ",
+            "time":"たいむ",
+        }</textarea>
     <button onclick="run()">実行</button>
-    <div class="prototype">
-        <dl>
-            <dt>日付</dt>
-            <dd id=$date>$date</dd>
-        </dl>
-        <dl>
-            <dt class=$time>時間</dt>
-            <dd>$time</dd>
-        </dl>
-        <dl data-value=$time>
-            <dt>タイトル</dt>
-            <dd>$title</dd>
-        </dl>
-        <dl>
-            <dt>内容</dt>
-            <dd>$contents</dd>
-        </dl>
+    <div id="prototypes" style="display:none;">
+        <div class="prototype">
+            <dl>
+                <dt>日付</dt>
+                <dd id=$date>$date</dd>
+            </dl>
+            <dl>
+                <dt class=$time>時間</dt>
+                <dd>$datetime</dd>
+            </dl>
+            <dl data-value=$time>
+                <dt>タイトル</dt>
+                <dd>$time</dd>
+            </dl>
+        </div>
+    </div>
+    <div id="output">
     </div>
     <script type="text/javascript" src="test.js"></script>
     </BODY>

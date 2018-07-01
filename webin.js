@@ -18,7 +18,7 @@ Webin.Bind = function(_params) {
 
     self.toText = function(text) {
         console.log('置換前:', text);
-        let ret = text.replace(self.params_regexp);
+        let ret = text.replace(params_pattern, self.getParams);
         console.log('置換後:', ret);
         return ret;
     };
@@ -65,15 +65,16 @@ Webin.Bind = function(_params) {
     };
 
 
-    self.params_regexp = [];
-
-//  正規表現の置換一覧表を作成する
-    for(key in _params) {
-       self.params_regexp.push([
-            new RegExp('\\$'+key, 'gi'), _params[key]
-       ]);
+    self.getParams = function(key) {
+        return self.params[key];
     }
 
-    console.log(self.params_regexp);
+
+    self.params = _params;
+
+//  正規表現のパターンを作成する
+    self.params_pattern = new RegExp('\\$(' + (Object.keys(self.params).join("|")) + ')',"gi");
+
+    console.log(self.params_pattern);
 
 };

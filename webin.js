@@ -72,8 +72,13 @@ Webin.Bind = function(_params) {
 
     self.params = _params;
 
+    let object_keys = Object.keys(self.params);
+    object_keys.sort(function(a,b){
+        return a < b ? 1 : -1;
+    })
+
 //  正規表現のパターンを作成する
-    self.params_pattern = new RegExp('\\$(' + (Object.keys(self.params).join("|")) + ')',"gi");
+    self.params_pattern = new RegExp('\\$(' + (object_keys.join("|")) + ')',"gi");
 
     console.log(self.params_pattern);
 

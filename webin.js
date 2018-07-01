@@ -18,7 +18,7 @@ Webin.Bind = function(_params) {
 
     self.toText = function(text) {
         console.log('置換前:', text);
-        let ret = text.replace(params_pattern, self.getParams);
+        let ret = text.replace(self.params_pattern, self.getParams);
         console.log('置換後:', ret);
         return ret;
     };
@@ -66,7 +66,7 @@ Webin.Bind = function(_params) {
 
 
     self.getParams = function(key) {
-        return self.params[key];
+        return self.params[key.slice(1)];
     }
 
 

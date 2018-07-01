@@ -17,7 +17,10 @@ Webin.Bind = function(_params) {
     };
 
     self.toText = function(text) {
-        return text.replace(self.params_regexp);
+        console.log('置換前:', text);
+        let ret = text.replace(self.params_regexp);
+        console.log('置換後:', ret);
+        return ret;
     };
 
     self.toTextNode = function(node) {

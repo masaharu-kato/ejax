@@ -71,4 +71,4 @@ Webin.bind = function(_params) {
        ]);
     });
 
-}();
+};

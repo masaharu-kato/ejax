@@ -6,11 +6,38 @@
         <script type="text/javascript" src="webin.js"></script>
     </HEAD>
     <BODY>
-    <textarea id="params" placeholder="ここにパラメータをJSON形式で入力...">{
-            "date":"でいと",
-            "datetime":"でいとたいむ",
-            "time":"たいむ"
-    }</textarea>
+    <textarea id="params" placeholder="ここにパラメータをJSON形式で入力...">
+        {
+            "date":"2018年5月13日",
+            "time":"17時34分",
+            "users": [
+                {
+                    "id": "Yamada Taro",
+                    "name": "山田太郎",
+                    "age": 21
+                },{
+                    "id": "Saburo Tanaka",
+                    "name": "田中三郎",
+                    "age": 27
+                },{
+                    "id": "Shingo Sasahara",
+                    "name": "笹原慎吾",
+                    "age": 31
+                },{
+                    "id": "Jiro Kato",
+                    "name": "加藤二郎",
+                    "age": 19
+                }
+            ],
+            "kinds": [
+                {"name":"分類A"},
+                {"name":"分類B"},
+                {"name":"分類C"},
+                {"name":"分類D"},
+                {"name":"分類E"}
+            ]
+        }
+    </textarea>
     <button onclick="run()">実行</button>
     <div id="prototypes" style="display:none;">
         <div class="prototype">
@@ -20,11 +47,15 @@
             </dl>
             <dl>
                 <dt class=$time>時間</dt>
-                <dd>$datetime</dd>
-            </dl>
-            <dl data-value=$time>
-                <dt>タイトル</dt>
                 <dd>$time</dd>
+            </dl>
+            <dl foreach="$kinds">
+                <p>[$name]</p>
+            </dl>
+            <dl foreach="$users">
+                <p>ユーザー名: $name</p>
+                <p>ユーザーID: $id</p>
+                <p>年齢: $age</p>
             </dl>
         </div>
     </div>

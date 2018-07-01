@@ -8,8 +8,11 @@ function run() {
 
     let output = document.getElementById('output');
 
+    let new_element = element.cloneNode(true);
+
     output.removeChild(output.firstChild);
-    output.appendChild(new Webin.Bind(params).to(element));
+    output.appendChild(new_element);
+    new Webin.Bind(params).toElementInternal(new_element);
     console.log('Done.');
 
 };

@@ -41,10 +41,10 @@ Webin.Bind = function(_params) {
         
         for(let i=0; i<n_nodes; i++) {
             let node = nodes[i];
-            if(node.nodeType == TEXT_NODE) {
+            if(node.nodeType == Node.TEXT_NODE) {
                 self.toTextNode(node);
             }
-            else if(node.nodeType == ELEMENT_NODE) {
+            else if(node.nodeType == Node.ELEMENT_NODE) {
                 self.toElement(node);
             }
         }

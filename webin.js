@@ -65,10 +65,12 @@ Webin.bind = function(_params) {
     self.params_regexp = [];
 
 //  正規表現の置換一覧表を作成する
-    _params.forEach(function(value, key){
+    for(key in _params) {
        self.params_regexp.push([
-            new RegExp('\\$'+key, 'gi'), value
+            new RegExp('\\$'+key, 'gi'), _params[key]
        ]);
-    });
+    }
+
+    console.log(self.params_regexp);
 
 };

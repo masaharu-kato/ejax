@@ -50,13 +50,16 @@
                 <dt class=$time>時間</dt>
                 <dd>$time</dd>
             </dl>
-            <dl foreach="$kinds">
+            <dl foreach=$kinds>
                 <p>[$name]</p>
             </dl>
-            <dl foreach="$users">
+            <dl foreach=$users>
                 <p>ユーザー名: $name</p>
                 <p>ユーザーID: $id</p>
                 <p>年齢: $age</p>
+            </dl>
+            <dl if="$kind==1">
+                kindは1です。
             </dl>
         </div>
     </div>

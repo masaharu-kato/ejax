@@ -1,5 +1,5 @@
 
-let BinderParams = (function() {
+Ejax.BinderParams = (function() {
 
     /* constructor */
     let BinderParams = function(params) {
@@ -103,7 +103,7 @@ let BinderParams = (function() {
         for(let i=this.uses.length-1; i >= 0; i--) {
 
             let path_full = this.uses[i] + '.' + path;
-            let value = this.getByRoot(path_full);
+            let value = this.getByFullPath(path_full);
 
             if(value != undefined){
                 return {

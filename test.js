@@ -14,7 +14,7 @@
 //    output.appendChild(new_element);
 //    new __EjaxInternal.Bind(params).to(new_element);
 
-    let binder = new Binder(params);
+    let binder = new Ejax.Binder(params);
 
     output.removeChild(output.firstChild);
 

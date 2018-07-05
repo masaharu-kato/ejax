@@ -1,24 +1,27 @@
 
-let Binder = (function() {
+let Ejax = {};
+
+Ejax.Binder = (function() {
 
     /* constructor */
     let Binder = function(params) {
         if(!(this instanceof Binder)) return new Binder(params);
 
-        this.params = new BinderParams(params);
-    }
+        this.params = new Ejax.BinderParams(params);
+    };
 
 
 
-    /* define prototype of this type */
+    // define prototype of this type
     const This = Binder.prototype;
 
 
-    /* element: target element object */
-    This.to = function(element) {
+    //  bind params to element cloned from model element;
+    //  element: target element object
+    This.to = function(elm_model) {
     
         // clone node recursively
-        let new_element = element.cloneNode(true);
+        let new_element = elm_model.cloneNode(true);
 
         // bind params to new_element
         this.toElement(new_element);
@@ -28,10 +31,12 @@ let Binder = (function() {
 
 
 
-    /* bind params to element including special attributes */
+    // bind params to element including special attributes
     This.toElement = function(element) {
 
         this.params.tryUse(element);
+
+        this.checkIfAttribute(element);
 
         this.tryForeachTo(element);
 
@@ -41,33 +46,38 @@ let Binder = (function() {
 
 
 
-    /* bind params to element itself and its attributes */
+    // bind params to element itself and its attributes
     This.toElementInternal = function(element) {
 
-    /* bind to attributes of element */
+        // bind to attributes of element
         this.toAttributes(element);
 
-    /* bind to child nodes or elements */
+        // bind to child nodes or elements
         this.toChildNodes(element);
     
     };
 
 
-    /* bind params to attributes of element */
+    const SPECIAL_ATTRS = ['foreach', 'use', 'if'];
+
+    // bind params to attributes of element
     This.toAttributes = function(element) {
 
         let attrs = element.attributes;
         let n_attrs = attrs.length;
         for(let i=0; i<n_attrs; i++) {
-            let name = attrs[i].name;
-            if(name == 'foreach' || name == 'use') continue;
+
+            //  if current attribute is special, slip
+            if(SPECIAL_ATTRS.indexOf(attrs[i].name) >= 0) continue;
+
+            //  bind params to value of current attribute
             attrs[i].value = this.toText(attrs[i].value);
         }
 
     };
 
 
-    /* bind params to child nodes in element */
+    //  bind params to child nodes in element
     This.toChildNodes = function(element) {
 
         let nodes = element.childNodes;
@@ -124,23 +134,27 @@ let Binder = (function() {
     };
 
 
+    /*  */
+    This.checkIfAttribute = function(element) {
+        if(!element.hasAttribute('if')) return;
+
+        statement = this.toText(element.getAttribute('if'));
+        
+
+
+    };
+
 
     /* try `use` path */
     This.tryForeachTo = function(element) {
         if(!element.hasAttribute('foreach')) return;
 
-        console.log('tryForeachTo (2)');
-
         let path = this.params.getFormattedPath(element.getAttribute('foreach'));
-        
-        console.log('tryForeachTo (3)', path);
         if(!path) return;
-
-        console.log('tryForeachTo (4)');
 
         /* run foreach process to element */
         this.foreachTo(element, this.params.getPathValue(path));
-    }
+    };
 
 
     /* generate elements from prototype with array of object  */
@@ -168,14 +182,16 @@ let Binder = (function() {
 
         }
 
+        console.log('foreachToClone', elm_model, obj_info);
+
         /* if value not set */
-        if(obj_info.value != undefined) return;
+        if(obj_info.value == undefined) return;
 
         /* set `use` by curret object */
         this.params.useByFullPath(obj_info.path);
 
         /* process with each value in array */
-        obj_info.value.forEach(function(value, key) { self.cloneElement(elm_model, key) });
+        obj_info.value.forEach(function(value, key) { self.cloneElement(elm_model, key); });
 
         /* unset object `use` */
         this.params.unsetLastUse();
@@ -185,6 +201,8 @@ let Binder = (function() {
 
     /* create element cloned by model element with key */
     This.cloneElement = function(elm_model, key) {
+
+        console.log('cloneElement', elm_model, key);
 
         /* clone original element recursively */
         let elm_instance = elm_model.cloneNode(true);
@@ -204,7 +222,7 @@ let Binder = (function() {
         /* append cloned element to same level to original element */
         elm_model.parentNode.appendChild(elm_instance);
 
-    }
+    };
 
     return Binder;
 })();

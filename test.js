@@ -1,6 +1,6 @@
 //  test.js
 
-function run() {
+// function run() {
 
     let element = document.getElementById('prototypes').getElementsByClassName('prototype')[0];
     let params  = JSON.parse(document.getElementById('params').value);
@@ -8,11 +8,25 @@ function run() {
 
     let output = document.getElementById('output');
 
-    let new_element = element.cloneNode(true);
+//    let new_element = element.cloneNode(true);
+
+//    output.removeChild(output.firstChild);
+//    output.appendChild(new_element);
+//    new __EjaxInternal.Bind(params).to(new_element);
+
+    let binder = new Binder(params);
 
     output.removeChild(output.firstChild);
+
+    let new_element = binder.to(element);
     output.appendChild(new_element);
-    new Webin.Bind(params).toElementInternal(new_element);
+
+    console.log(new_element);
+
     console.log('Done.');
 
-};
+// };
+
+//window.onload = function() {
+//    run();
+//};

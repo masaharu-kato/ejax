@@ -1,9 +1,19 @@
 //  webin.js
-let _Ejax;
+let __EjaxInternal;
 
-_Ejax.Bind = (function() {
+__EjaxInternal.Bind = (function() {
 
-    const This = _Ejax.Bind.prototype;
+    const This = __EjaxInternal.Bind.prototype;
+
+
+    /* constructor */
+    let Bind = function(params) {
+        this.params = {};
+        this.params.data = params;
+        this.params.uses = [];
+        this.params.uses_numbers = [];
+    }
+
 
     /* element: target element object */
     This.to = function(element) {
@@ -12,29 +22,35 @@ _Ejax.Bind = (function() {
         let new_element = element.cloneNode(true);
 
         /* bind params to new_element */
-        This.toElementInternal(new_element);
+        This.toElement(new_element);
 
         return new_element;
     };
 
-    This.params_pattern = /\$([\w.]+)|\{\$([\w.]+)\}|\$\{([^\}]+)\}/ig;
+    /* bind params to element including special attributes */
+    This.toElement = function(element) {
 
-    /* bind params to text and returns it */
-    This.toText = function(text) {
+        This.tryUse(element);
 
-        /* remove white spaces at both ends */
-        let text = text.trim();
+        This.tryForeachTo(element);
 
-        /* replace if text is not empty */
-        if(text) text = text.replace(This.params_pattern, This.getParams);
+        This.toElementInternal(element);
 
-        return text;
     };
 
-    /* bind params to node */
-    This.toTextNode = function(node) {
-        node.nodeValue = This.toText(node.nodeValue);
+
+
+    /* bind params to element itself and its attributes */
+    This.toElementInternal = function(element) {
+
+    /* bind to attributes of element */
+        This.toAttributes(element);
+
+    /* bind to child nodes or elements */
+        This.toChildNodes(element);
+    
     };
+
 
     /* bind params to attributes of element */
     This.toAttributes = function(element) {
@@ -47,6 +63,7 @@ _Ejax.Bind = (function() {
         }
 
     };
+
 
     /* bind params to child nodes in element */
     This.toChildNodes = function(element) {
@@ -67,38 +84,67 @@ _Ejax.Bind = (function() {
     };
 
 
-    
-    This.toElement = function(element) {
 
 
-     //   console.log('toElement begin');
-
-    /* check 'use' attribute */
-    
-        // let attr_use = element.getAttribute('use');
-        // if(attr_use){
-        //     /* remove first '$' */
-        //     if(attr_use.charAt(0) == '$') attr_use = attr_use.slice(1);
-
-        //     /* bind with params of attr_use */
-        //     return new Webin.Bind(This.params[attr_use]).toElementInternal(element);
-        // }
-
-        /* try 'foreach' attribute */
-        This.tryForeachTo(element, This.params.getPathValue(element.getAttribute('foreach')));
-
-        This.toElementInternal(element);
-
-
-    //    console.log('toElement end');
+    /* bind params to node */
+    This.toTextNode = function(node) {
+        node.nodeValue = This.toText(node.nodeValue);
     };
+
+
+
+    /* bind params to text and returns it */
+    This.toText = function(text) {
+
+        /* remove white spaces at both ends */
+        let text = text.trim();
+
+        /* replace if text is not empty */
+        if(text) text = text.replace(/\$([\w.]+)|\{\$([\w.]+)\}|\$\{([^\}]+)\}/ig, This.getPathValue);
+
+        return text;
+    };
+
+
+
+    /* try `use` path */
+    This.tryForeachTo = function(element) {
+        if(!element.hasAttribute('foreach')) return;
+
+        let path;
+        if(!(path = This.params.getFormattedPath(raw_path_text))) return;
+
+        /* run foreach process to element */
+        This.foreachTo(element, This.params.getPathValue(path));
+    }
 
 
     /* generate elements from prototype with array of object  */
     This.foreachTo = function(elm_model, obj_info) {
 
-        /* process foreach with each objects */
-        if(Array.isArray(obj_info)) obj_info.forEach(function(c_obj_info){ This.foreachTo(c_obj_info); });
+        foreachToClone(elm_model, obj_info);
+
+        /* remove original element */
+        elm_model.parentNode.removeChild(elm_model);
+
+    };
+
+
+    /* foreach internal process */
+    This.foreachToClone = function(elm_model, obj_info) {
+        /* obj_info has .path .value attributes */
+
+        if(Array.isArray(obj_info)){
+            
+            /* process foreach with each objects */
+            obj_info.forEach(function(c_obj_info){ This.foreachToClone(c_obj_info); });
+
+            return;
+
+        }
+
+        /* if value not set */
+        if(obj_info.value != undefined) return;
 
         /* set `use` by curret object */
         This.params.useByFullPath(obj_info.path);
@@ -109,10 +155,7 @@ _Ejax.Bind = (function() {
         /* unset object `use` */
         This.params.unsetLastUse();
 
-        /* remove original element */
-        elm_model.parentNode.removeChild(elm_model);
-
-    }
+    };
 
 
     /* create element cloned by model element with key */
@@ -140,32 +183,35 @@ _Ejax.Bind = (function() {
 
 
 
-
-    /* functions of parameters */
-    This.params = {};
-
-    This.params.data = _params;
-    This.params.uses = [];
-    This.params.uses_numbers = [];
+    /* try `use` path */
+    This.params.tryUse = function(element) {
+        if(!element.hasAttribute('use')) return;
+        let path;
+        if(path = This.params.getFormattedPath(element.getAttribute('use'))) return This.params.use(path);
+    }
 
 
     /* `use` path */
     This.params.use = function(path) {
-        let uses_number = This.params.useByFullPath(This.params.getFullPath(path));
-        This.params.uses_numbers.push(uses_number);
+
+        /* TODO: Process if path is array here... */
+
+        This.params.useByFullPath(This.params.getFullPath(path));
     }
+
 
     /* set current level of key */
     This.params.useByFullPath = function(path) {
 
         if(Array.isArray(path)){
             path.forEach(function(cpath){ This.params.uses.path(cpath); });
-            return cpath.length;
+            This.params.uses_numbers.push(cpath.length);
         }
 
         This.params.uses.push(path);
-        return 1;
+        This.params.uses_numbers.push(1);
     }
+
 
     /* unset last use */
     This.params.unsetLastUse = function() {
@@ -181,6 +227,9 @@ _Ejax.Bind = (function() {
 
     }
 
+
+
+
     /* get value of dot-leveled key (e.g. 'user.address.city') from root in parameters */
     This.params.getByFullPath = function(path) {
 
@@ -193,7 +242,8 @@ _Ejax.Bind = (function() {
         /* set and check */
         for(let i=0; i<keys.length; i++) {
 
-            value = This.params.data[keys[i]];
+            /* `this` not `This` */
+            value = this.params.data[keys[i]];
 
             /* returns if specified key is not exists */
             if(value == undefined){
@@ -211,11 +261,13 @@ _Ejax.Bind = (function() {
 
         let ret = This.params.getPathValue(path);
 
+    /*
         if(Array.isArray(ret)){
             let result = [];
             ret.forEach(function(cret) { result.push(cret.path); })
             return result;
         }
+    */
 
         return ret.path;
     }
@@ -226,11 +278,13 @@ _Ejax.Bind = (function() {
 
         let ret = This.params.getPathValue(path);
 
+    /*
         if(Array.isArray(ret)){
             let result = [];
             ret.forEach(function(cret) { result.push(cret.value); })
             return result;
         }
+    */
 
         return ret.value;
     }
@@ -239,7 +293,8 @@ _Ejax.Bind = (function() {
     /* get value in parameters with levels specified in 'use' */
     This.params.getPathValue = function(path) {
 
-        /* case when relative path is multiple */
+    /*
+        // case when relative path is multiple 
         if(typeof(path) == 'object'){
 
             let results = [];
@@ -249,6 +304,7 @@ _Ejax.Bind = (function() {
     
             return results;
         }
+    */
 
         /* try with `using` levels */
         for(let i=This.params.uses.length-1; i >= 0; i--) {
@@ -269,6 +325,12 @@ _Ejax.Bind = (function() {
     };
 
 
+
+
+
+
+
+
     /* return formatted path text */
     This.params.getFormattedPath = function(path) {
 
@@ -282,13 +344,5 @@ _Ejax.Bind = (function() {
     };
 
 
-    This.toElementInternal = function(element) {
-
-    /* bind to attributes of element */
-        This.toAttributes(element);
-
-    /* bind to child nodes or elements */
-        This.toChildNodes(element);
-
-    };
-};
+    return Bind;
+})();

@@ -17,8 +17,8 @@ Ejax.BinderParams = (function() {
     /* try `use` path */
     This.tryUse = function(element) {
         if(!element.hasAttribute('use')) return;
-        let path;
-        if(path = this.getFormattedPath(element.getAttribute('use'))) return this.use(path);
+        let path = this.getFormattedPath(element.getAttribute('use'));
+        if(path) return this.use(path);
     }
 
 

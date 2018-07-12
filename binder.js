@@ -36,7 +36,7 @@ Ejax.Binder = (function() {
 
         this.params.tryUse(element);
 
-        this.checkIfAttribute(element);
+        if(this.checkIfAttribute(element) == false)
 
         this.tryForeachTo(element);
 
@@ -77,35 +77,41 @@ Ejax.Binder = (function() {
     };
 
 
+
+
+
     //  bind params to child nodes in element
     This.toChildNodes = function(element) {
 
         let nodes = element.childNodes;
-        let n_nodes = nodes.length;
-
-    //    console.log('nodes:', nodes);
-    //    console.log('n_nodes:', n_nodes);
-        
-        for(let i=0; i<nodes.length; i++) {
-        //    console.log('index:', i);
-            let node = nodes[i];
-        //    console.log('current node:', node);
-
-            if(node.nodeType == Node.TEXT_NODE) {
-                this.toTextNode(node);
-            }
-            else if(node.nodeType == Node.ELEMENT_NODE) {
-                this.toElement(node);
-            }
-
+        for(let i=0; i<nodes.length; i++){
+            this.toNode(nodes[i]);
         }
 
     };
 
 
+    /* bind params to various node */
+    This.toNode = function(node) {
+
+        switch(nodes[i].nodeType) {
+        case Node.ELEMENT_NODE:
+            return this.toElement(node);
+
+        case Node.TEXT_NODE:
+            return this.toTextNode(node);
+
+        case Node.DOCUMENT_NODE:
+            return this.toChildNodes(node);
+
+        }
+
+        return null;
+    };
 
 
-    /* bind params to node */
+
+    /* bind params to text node */
     This.toTextNode = function(node) {
         node.nodeValue = this.toText(node.nodeValue);
     };
@@ -115,37 +121,44 @@ Ejax.Binder = (function() {
     /* bind params to text and returns it */
     This.toText = function(text) {
 
-        /* remove white spaces at both ends */
         text = text.trim();
 
-        /* replace if text is not empty */
         if(text){
-            const self = this;
-        //    console.log('self:', self);
             text = text.replace(
+
+                /* 3 patterns ($hoge, {$hoge}, ${hoge}) with case sensitive*/
                 /\$([\w.]+)|\{\$([\w.]+)\}|\$\{([^\}]+)\}/ig,
-                function(pathtext) {
-                    return self.params.get(pathtext);
-                }
+
+                /* replace with value of matched parameter key */
+                function(match, p1) {
+                    return this.params.getValue(p1);
+                }.bind(this)
+
             );
         }
 
         return text;
     };
 
-
-    /*  */
-    This.checkIfAttribute = function(element) {
-        if(!element.hasAttribute('if')) return;
-
-        statement = this.toText(element.getAttribute('if'));
+    This.getValueText = function(match, p1, p2, p3) {
         
-
-
     };
 
 
-    /* try `use` path */
+    //
+    This.checkIfAttribute = function(element) {
+        if(!element.hasAttribute('if')) return undefined;
+
+        return this.evaluateText(element.getAttribute('if'));
+    };
+
+    //
+    This.evaluateText = function(text) {
+        return Function('return ' + this.toText(text))();
+    }
+
+
+    // try `use` path
     This.tryForeachTo = function(element) {
         if(!element.hasAttribute('foreach')) return;
 
@@ -173,27 +186,22 @@ Ejax.Binder = (function() {
         /* obj_info has .path .value attributes */
         const self = this;
 
+        /* process foreach with each objects if obj_info is multiple */
         if(Array.isArray(obj_info)){
-            
-            /* process foreach with each objects */
-            obj_info.forEach(function(c_obj_info){ self.foreachToClone(c_obj_info); });
-
-            return;
-
+            return obj_info.forEach(function(c_obj_info){ self.foreachToClone(c_obj_info); });
         }
 
-        console.log('foreachToClone', elm_model, obj_info);
+    //    console.log('foreachToClone', elm_model, obj_info);
 
-        /* if value not set */
         if(obj_info.value == undefined) return;
 
-        /* set `use` by curret object */
+        // set `use` by curret object
         this.params.useByFullPath(obj_info.path);
 
-        /* process with each value in array */
+        // process with each value in array
         obj_info.value.forEach(function(value, key) { self.cloneElement(elm_model, key); });
 
-        /* unset object `use` */
+        // unset object `use`
         this.params.unsetLastUse();
 
     };
@@ -202,7 +210,7 @@ Ejax.Binder = (function() {
     /* create element cloned by model element with key */
     This.cloneElement = function(elm_model, key) {
 
-        console.log('cloneElement', elm_model, key);
+    //    console.log('cloneElement', elm_model, key);
 
         /* clone original element recursively */
         let elm_instance = elm_model.cloneNode(true);

@@ -12,6 +12,16 @@ Ejax.Binder = (function() {
 
 
 
+    
+    const ATTR_FOREACH = 'foreach';
+    const ATTR_USE = 'use';
+    const ATTR_IF = 'if';
+
+    //  name of attributes which has special meaning of element
+    const SPECIAL_ATTRS = [ATTR_FOREACH, ATTR_USE, ATTR_IF];
+
+
+
     // define prototype of this type
     const This = Binder.prototype;
 
@@ -34,40 +44,54 @@ Ejax.Binder = (function() {
     // bind params to element including special attributes
     This.toElement = function(element) {
 
-        this.params.tryUse(element);
+        //  check value at 'if' attribute
+        if(!this.checkIfText(element, ATTR_IF)) return;
+        
+        //  set value using specified at 'use' attribute
+        this.params.tryUse(element, ATTR_USE);
 
-        if(this.checkIfAttribute(element) == false)
-
+        //  clone with value specified at 'foreach' attribute
         this.tryForeachTo(element);
 
-        this.toElementInternal(element);
+        //  bind params to attributes of element
+        this.toAttributes(element.attributes);
+
+        //  bind params to child nodes or elements
+        this.toNodes(element.childNodes);
 
     };
 
+    
 
-
-    // bind params to element itself and its attributes
+    // bind params to element including special attributes
     This.toElementInternal = function(element) {
 
-        // bind to attributes of element
-        this.toAttributes(element);
+        //  check value at 'if' attribute
+        if(!this.checkIfText(element, ATTR_IF_INTERNAL)) return;
+        
+        //  set value using specified at 'use' attribute
+        this.params.tryUse(element, ATTR_USE_INTERNAL);
 
-        // bind to child nodes or elements
-        this.toChildNodes(element);
-    
+        //  clone with value specified at 'foreach' attribute
+        this.tryForeachTo(element);
+
+        //  bind params to attributes of element
+        this.toAttributes(element.attributes);
+
+        //  bind params to child nodes or elements
+        this.toNodes(element.childNodes);
+
     };
 
 
-    const SPECIAL_ATTRS = ['foreach', 'use', 'if'];
+    //  bind params to attributes of element
+    This.toAttributes = function(attrs) {
+        if(!attrs) return null;
 
-    // bind params to attributes of element
-    This.toAttributes = function(element) {
-
-        let attrs = element.attributes;
         let n_attrs = attrs.length;
         for(let i=0; i<n_attrs; i++) {
 
-            //  if current attribute is special, slip
+            //  if current attribute is special, skip
             if(SPECIAL_ATTRS.indexOf(attrs[i].name) >= 0) continue;
 
             //  bind params to value of current attribute
@@ -79,11 +103,10 @@ Ejax.Binder = (function() {
 
 
 
-
     //  bind params to child nodes in element
-    This.toChildNodes = function(element) {
+    This.toNodes = function(nodes) {
+        if(!nodes) return null;
 
-        let nodes = element.childNodes;
         for(let i=0; i<nodes.length; i++){
             this.toNode(nodes[i]);
         }
@@ -146,10 +169,10 @@ Ejax.Binder = (function() {
 
 
     //
-    This.checkIfAttribute = function(element) {
-        if(!element.hasAttribute('if')) return undefined;
+    This.checkIfText = function(element, ATTR_NAME) {
+        if(!element.hasAttribute(ATTR_NAME)) return true;
 
-        return this.evaluateText(element.getAttribute('if'));
+        return this.evaluateText(element.getAttribute(ATTR_NAME));
     };
 
     //
@@ -158,11 +181,11 @@ Ejax.Binder = (function() {
     }
 
 
-    // try `use` path
+    // try `foreach`
     This.tryForeachTo = function(element) {
-        if(!element.hasAttribute('foreach')) return;
+        if(!element.hasAttribute(ATTR_FOREACH)) return;
 
-        let path = this.params.getFormattedPath(element.getAttribute('foreach'));
+        let path = this.params.getFormattedPath(element.getAttribute(ATTR_FOREACH));
         if(!path) return;
 
         /* run foreach process to element */
@@ -216,7 +239,7 @@ Ejax.Binder = (function() {
         let elm_instance = elm_model.cloneNode(true);
         
         /* remove 'foreach' attribute because element has been cloned */
-        elm_instance.removeAttribute('foreach');
+        elm_instance.removeAttribute(ATTR_FOREACH);
 
         /* `use` current key when bind */
         this.params.use(key); 

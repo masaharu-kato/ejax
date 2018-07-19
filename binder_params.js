@@ -8,7 +8,7 @@ Ejax.BinderParams = (function() {
         this.data = params;
         this.uses = [];
         this.uses_numbers = [];
-    }
+    };
 
     /* define prototype of this type */
     const This = BinderParams.prototype;
@@ -19,7 +19,7 @@ Ejax.BinderParams = (function() {
         if(!element.hasAttribute('use')) return;
         let path = this.getFormattedPath(element.getAttribute('use'));
         if(path) return this.use(path);
-    }
+    };
 
 
     /* `use` path */
@@ -28,7 +28,7 @@ Ejax.BinderParams = (function() {
         /* TODO: Process if path is array here... */
 
         this.useByFullPath(this.getFullPath(path));
-    }
+    };
 
 
     /* set current level of key */
@@ -41,7 +41,7 @@ Ejax.BinderParams = (function() {
 
         this.uses.push(path);
         this.uses_numbers.push(1);
-    }
+    };
 
 
     /* unset last use */
@@ -55,14 +55,13 @@ Ejax.BinderParams = (function() {
 
         /* remove number of last uses */
         this.uses_numbers.pop();
-
-    }
+    };
 
 
     /* return value at raw path text */
     This.get = function(pathtext) {
         return this.getValue(this.getFormattedPath(pathtext));
-    }
+    };
 
     
     /* return value at (relative) path */
@@ -79,7 +78,7 @@ Ejax.BinderParams = (function() {
     */
 
         return ret.value;
-    }
+    };
 
 
     /* get value in parameters with levels specified in 'use' */
@@ -178,7 +177,7 @@ Ejax.BinderParams = (function() {
     */
 
         return ret.path;
-    }
+    };
 
     return BinderParams;
 })();

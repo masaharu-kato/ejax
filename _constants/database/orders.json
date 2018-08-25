@@ -1,0 +1,8 @@
+{
+    "Columns": {
+        "id"      : { "Type": "int"       , "AutoIncrementPrimary": true },
+        "user_id" : { "Type": "int"       , "References": ["users.id"]   },
+        "datetime": { "Type": "datetime" },
+        "state"   : { "Type": "int"      }
+    }
+}

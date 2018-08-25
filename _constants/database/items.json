@@ -1,0 +1,9 @@
+{
+    "Columns": {
+        "id"     : { "Type":"int"   , "AutoIncrementPrimary": true },
+        "kind_id": { "Type":"int"   , "References": ["kinds.id"]   },
+        "name"   : { "Type":"text" },
+        "price"  : { "Type":"int"  },
+        "stock"  : { "Type":"int"  }
+    }
+}

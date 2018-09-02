@@ -1,0 +1,14 @@
+# 親.htaccessによるURLの書き換えを無効にする
+RewriteEngine Off
+#
+# HTTP を HTTPS へ転送する
+RewriteEngine on
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://YOUR_HOST_NAME.jp/$1 [R=301,L]
+#
+# 存在しないファイルにアクセスした場合、_request.phpを読む
+RewriteCond %{REQUEST_FILENAME} !-f 
+RewriteRule ^(.*)$ _request.php
+#
+# エラー時のページを指定する
+# ErrorDocument 404 /error.html

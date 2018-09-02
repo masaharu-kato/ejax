@@ -1,0 +1,11 @@
+{
+    "Columns": {
+        "id"      : { "Type": "int"  , "AutoIncrementPrimary": true },
+        "user_id" : { "Type": "int"  , "References": ["users.id"]   },
+        "item_id" : { "Type": "int"  , "References": ["items.id"]   },
+        "number"  : { "Type": "int" }
+    },
+    "Uniques": [
+        ["user_id", "item_id"]
+    ]
+}

@@ -20,6 +20,7 @@ Ejax.Binder = (function() {
     //  name of attributes which has special meaning of element
     const SPECIAL_ATTRS = [ATTR_FOREACH, ATTR_USE, ATTR_IF];
 
+    const _Function = Function;
 
 
     // define prototype of this type
@@ -177,8 +178,8 @@ Ejax.Binder = (function() {
 
     //
     This.evaluateText = function(text) {
-        return Function('return ' + this.toText(text))();
-    }
+        return _Function('return ' + this.toText(text))();
+    };
 
 
     // try `foreach`

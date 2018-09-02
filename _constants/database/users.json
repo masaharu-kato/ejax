@@ -1,0 +1,8 @@
+{
+    "Columns": {
+        "id"      : { "Type": "int"  , "AutoIncrementPrimary": true },
+        "name"    : { "Type": "text" },
+        "birthday": { "Type": "date" },
+        "mail"    : { "Type": "text" }
+    }
+}

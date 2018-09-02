@@ -1,0 +1,6 @@
+{
+    "Columns": {
+        "id"  : { "Type": "int"   , "AutoIncrementPrimary": true },
+        "name": { "Type": "text" }
+    }
+}

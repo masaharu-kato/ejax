@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<HTML>
+    <HEAD>
+        <META CHARSET="UTF-8" />
+        <TITLE>Proxy Test</TITLE>
+    </HEAD>
+    <BODY>
+        <script>
+            let validator = {
+                set: function(obj, prop, value) {
+                    if (prop === 'age') {
+                        if (!Number.isInteger(value)) {
+                            throw new TypeError('年齢が整数ではありません');
+                        }
+                        if (value > 200) {
+                            throw new RangeError('年齢が不正なようです');
+                        }
+                    }
+
+                    // 値を保存する既定の挙動
+                    obj[prop] = value;
+
+                    // 値の保存が成功したことを返します。
+                    return true;
+                }
+            };
+
+            let person = new Proxy({}, validator);
+
+            person.age = 100;
+            console.log(person.age); // 100
+            person.age = 'young'; // 例外が投げられる
+            person.age = 300; // 例外が投げられる
+        </script>
+    </BODY>
+</HTML>
+
+

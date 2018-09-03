@@ -4,7 +4,8 @@ RewriteEngine Off
 # HTTP を HTTPS へ転送する
 RewriteEngine on
 RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://YOUR_HOST_NAME.jp/$1 [R=301,L]
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+# RewriteRule ^(.*)$ https://YOUR_HOST_NAME/$1 [R=301,L]
 #
 # 存在しないファイルにアクセスした場合、_request.phpを読む
 RewriteCond %{REQUEST_FILENAME} !-f 

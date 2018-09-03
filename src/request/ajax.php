@@ -1,6 +1,8 @@
 <?php
 namespace _Request\Ajax;
-require_once __DIR__.'/_auth_required.php';
+require_once SRC_ROOT.'/auth/funcs/required.php';
+
+    \Auth\requiredForSystem();
     
     header("Content-type: text/plain; charset=UTF-8");
 

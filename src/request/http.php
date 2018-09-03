@@ -1,6 +1,5 @@
 <?php
 namespace _Request;
-require_once __DIR__.'/_error.php';
 
 //  要求URIに関する処理
     $__uri = $_SERVER['REQUEST_URI'];                   //  要求URI ( / から始まり、パラメータも含む)
@@ -22,12 +21,12 @@ require_once __DIR__.'/_error.php';
         require_once __DIR__.'/__ajax_list.php';
         $__access_ajax_kind = Ajax\__list[$__request_path[2] ?? ''] ?? null;
         if($__access_ajax_kind === null) throw new \Exception('Unknown kind of ajax.');
-        require __DIR__.'/ajax.php';
+        require SRC_ROOT.'/request/ajax.php';
         break;
     
     //  ファイルアクセス
     case '.files':
-        require_once __DIR__.'/../base/file/read.php';
+        require_once SRC_ROOT.'/file/read.php';
         //  \File\read($__uri_rest_directories);
         http_response_code(404);
         require Error\getFilePath(404);
@@ -44,7 +43,6 @@ require_once __DIR__.'/_error.php';
         require_once __DIR__.'/__path_list.php';
         if(!isset(Http\__list[$__uri_directories])){
             http_response_code(404);
-            require Error\getFilePath(404);
             break;
         }
         require __DIR__.'/../'.Http\__list[$__uri_directories];

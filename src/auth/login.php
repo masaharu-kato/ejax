@@ -1,9 +1,12 @@
 <?php
 namespace Ejax\Auth;
+    require_once DATA_ROOT.'/preferences/urls.php';
     require_once SRC_ROOT.'/auth/funcs/required.php';
     require_once SRC_ROOT.'/auth/funcs/token.php';
     require_once SRC_ROOT.'/utils/h_wrapper.php';
-    require_once DATA_ROOT.'/preferences/urls.php';
+    require_once SRC_ROOT.'/utils/http/response.php';
+
+    use Ejax\Http\Response as Res;
 
 //  Dummy Hash
     const dummy_hash = '$2y$10$vi4sizf0pl5fgwtzogw19bzcqb.vi4sizf0pl5fgwtzogw19bzcqb';
@@ -28,10 +31,7 @@ namespace Ejax\Auth;
         $original_page = $_SESSION['.ejax_original_uri'] ?? URI_INDEX;
 
     //  If already authorized, redirect to original page
-	    if(isset($_SESSION['.ejax_authed'])){
-	        header('Location:'.$original_page);  
-	        exit;
-	    }
+	    if(isAuthed()) Res\redirect($original_page);
         
     //  Treat as lower cases in username
         $username = mb_strtolower(\h($_username));
@@ -54,14 +54,13 @@ namespace Ejax\Auth;
         session_regenerate_id(true);
 
     //  Set flag of authorized
-        $_SESSION['.ejax_authed'] = true;
+        $_SESSION['.ejax/authed'] = true;
 
     //  TODO: 
         $getUserInformation($username);
         
     //  Redirect to original page
-        header('Location: '.$original_page);
-        exit;
+        Res\redirect($original_page);
         
     }
 ?>

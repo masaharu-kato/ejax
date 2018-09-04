@@ -56,6 +56,8 @@ let SForm = function(options) {
         return true;
     };
 
+    
+
     /* get form values with name key */
     this.getValues = function() {
 

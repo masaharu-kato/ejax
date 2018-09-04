@@ -1,5 +1,5 @@
 <?php
-namespace File;
+namespace Ejax\File;
 
 //  一時ファイルができているか（アップロードされているか）を確認する
     if(!is_uploaded_file($_FILES['up_file']['tmp_name'])) die('File not uploaded.');

@@ -1,5 +1,7 @@
 <?php
-namespace _Request;
+namespace Ejax\_Request;
+require_once SRC_ROOT.'/utils/http/response.php';
+use Ejax\Http\Response;
 
 //  要求URIに関する処理
     $__uri = $_SERVER['REQUEST_URI'];                   //  要求URI ( / から始まり、パラメータも含む)
@@ -29,7 +31,6 @@ namespace _Request;
         require_once SRC_ROOT.'/file/read.php';
         //  \File\read($__uri_rest_directories);
         http_response_code(404);
-        require Error\getFilePath(404);
         break;
 
     //  APIアクセス

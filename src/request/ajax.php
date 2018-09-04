@@ -1,5 +1,5 @@
 <?php
-namespace _Request\Ajax;
+namespace Ejax\_Request\Ajax;
 require_once SRC_ROOT.'/auth/funcs/required.php';
 
     \Auth\requiredForSystem();

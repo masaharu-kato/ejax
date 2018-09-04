@@ -1,5 +1,5 @@
 <?php
-namespace Auth;
+namespace Ejax\Auth;
 
 	/**
 	 * generate_token

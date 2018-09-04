@@ -1,49 +1,43 @@
 <?php
-namespace Auth;
-	require_once SRC_ROOT.'/utils/uri.php';
+namespace Ejax\Auth;
 	require_once DATA_ROOT.'/preferences/urls.php';
+	require_once SRC_ROOT.'/auth/funcs/isAuthed.php';
+	require_once SRC_ROOT.'/utils/http/request.php';
+	require_once SRC_ROOT.'/utils/http/response.php';
 
-	//	Check authorization for systematic use
-	//	If it is not authorized, it returns 403 response.
-	function requiredForSystem(){
+	use Ejax\Http\Request as Req;
+	use Ejax\Http\Response as Res;
 
-	    @session_start();
-
-	    if(!isset($_SESSION['username'])){
-			http_response_code(403);
-	        exit;
-	    }
-
-	}
-
-	//  Check authorization for users' use
-	//	If it is not authorized, it redirects to login page.
-	function requiredForUser(){
+	/**
+	 * requiredForSystem
+	 * 	Check authorization for systematic use
+	 * 	If it is not authorized, it returns 403 response.
+	 * @return void
+	 */
+	function requiredForSystem() : void {
 
 	    @session_start();
 
-		$_SESSION['original_uri'] = \URI\getFullURI();
-
-	    if(!isset($_SESSION['username'])){
-	        header('Location: '.URL_LOGIN); // 移動先
-	        exit;
-	    }
+	    if(!isAuthed()) Res\statusCode(403);
 
 	}
 
-	//  Check if already authorized for users' use
-	//	Put this to login page, to redirect index page if already authorized.
-	function checkAlreadyAuthedForUser($original_url){
+
+	/**
+	 * requiredForUser
+	 *   Check authorization for users' use
+	 *   If it is not authorized, it redirects to login page.
+	 * @return void
+	 */
+	function requiredForUser() : void {
 
 	    @session_start();
 
-	    if(isset($_SESSION['username'])){
-	        header('Location: '.$original_url); // 移動先  
-	        exit;
-	    }
-	    
-	}
+		$_SESSION['original_uri'] = Req\getFullURI();
 
+	    if(!isAuthed()) Res\redirect(URL_LOGIN);
+
+	}
 
 
 	//	Delete cookie for having current session ID

@@ -1,5 +1,5 @@
 <?php
-namespace Auth;
+namespace Ejax\Auth;
     require_once SRC_ROOT.'/auth/funcs/required.php';
     require_once SRC_ROOT.'/auth/funcs/token.php';
     require_once SRC_ROOT.'/utils/h_wrapper.php';

@@ -2,7 +2,7 @@
 namespace Ejax\File;
 
 
-    function toRealPathData(array $original_path) : string {
+    function toRealPathDataByData(array $original_path) : string {
 
         $real_path = [];
 
@@ -36,17 +36,28 @@ namespace Ejax\File;
 
     }
 
+    
+
+
+    function toRealPathByData(array $path) : string {
+
+        return toRealPathDataByData(explode('/', $path));
+
+    }
+
+    
+    function toRealPathFromData(array $data) : string {
+
+        return '/'.implode('/', $data);
+        
+    }
 
     function toRealPath(string $path) : string {
 
-        $real_path = toRealPathData(explode('/', $path));
-
-        $real_path_text = '';
-        foreach($real_path as $cdir) $real_path_text .= '/'.$cdir;
-
-        return $real_path_text;
+        return toRealPathFromData(toRealPathByData($path));
         
     }
+
 
 
 ?>

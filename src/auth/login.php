@@ -1,6 +1,6 @@
 <?php
 namespace Ejax\Auth;
-    require_once DATA_ROOT.'/preferences/urls.php';
+    require_once DAT_PREF_DIR.'/urls.php';
     require_once SRC_ROOT.'/auth/funcs/required.php';
     require_once SRC_ROOT.'/auth/funcs/token.php';
     require_once SRC_ROOT.'/utils/h_wrapper.php';
@@ -31,7 +31,7 @@ namespace Ejax\Auth;
         $original_page = $_SESSION['.ejax_original_uri'] ?? URI_INDEX;
 
     //  If already authorized, redirect to original page
-	    if(isAuthed()) Res\redirect($original_page);
+	    if(isAuthed()) Res\exitWithRedirect($original_page);
         
     //  Treat as lower cases in username
         $username = mb_strtolower(\h($_username));
@@ -60,7 +60,7 @@ namespace Ejax\Auth;
         $getUserInformation($username);
         
     //  Redirect to original page
-        Res\redirect($original_page);
+        Res\exitWithRedirect($original_page);
         
     }
 ?>

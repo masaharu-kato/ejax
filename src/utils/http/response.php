@@ -1,5 +1,15 @@
 <?php
 namespace Ejax\Http\Response;
+
+    /**
+     * outContentType
+     * output Content-type header 
+     * 
+     * @return void
+     */
+    function outContentType() : void {
+        header("Content-type: text/plain; charset=UTF-8");
+    }
     
     /**
      * redirect
@@ -9,7 +19,7 @@ namespace Ejax\Http\Response;
      * 
      * @return void
      */
-    function redirect(string $url) : void {
+    function exitWithRedirect(string $url) : void {
         header('Location: '.$url); // 移動先  
         exit;
     }
@@ -23,7 +33,7 @@ namespace Ejax\Http\Response;
      * 
      * @return void
      */
-    function statusCode(int $code) : void {
+    function exitWithStatus(int $code) : void {
         http_status_code($code);
         exit;
     }

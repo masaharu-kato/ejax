@@ -59,4 +59,12 @@ namespace Ejax\Http\Request;
         return $_SERVER['REQUEST_METHOD'];
     }
 
+    /**
+     * isAjax
+     * @return bool : whether request is by Ajax
+     */
+    function isAjax() : bool {
+        return strtolower($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') == 'xmlhttprequest';
+    }
+
 ?>

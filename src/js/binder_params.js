@@ -1,4 +1,4 @@
-
+/* class Ejax::BinderParams */
 Ejax.BinderParams = (function() {
 
     /* constructor */

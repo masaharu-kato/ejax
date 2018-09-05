@@ -1,6 +1,7 @@
-
+/* class Ejax */
 let Ejax = {};
 
+/* class Ejax::Binder */
 Ejax.Binder = (function() {
 
     /* constructor */
@@ -27,8 +28,13 @@ Ejax.Binder = (function() {
     const This = Binder.prototype;
 
 
-    //  bind params to element cloned from model element;
-    //  element: target element object
+    /**
+     * to
+     *   bind params to element cloned from model element;
+     * 
+     * @param  {Element} elm_model : target HTML element (const)
+     * @return {Element} : new (cloned) element object
+     */
     This.to = function(elm_model) {
     
         // clone node recursively
@@ -41,8 +47,13 @@ Ejax.Binder = (function() {
     };
 
 
-
-    // bind params to element including special attributes
+    /**
+     * toElement
+     *   bind params to element including special attributes
+     * 
+     * @param {Element} element 
+     * @return {void}
+     */
     This.toElement = function(element) {
 
         //  check value at 'if' attribute
@@ -62,9 +73,12 @@ Ejax.Binder = (function() {
 
     };
 
-    
 
-    // bind params to element including special attributes
+    /**
+     * toElementInternal
+     *   bind params to element including special attributes
+     * @param {Element} element 
+     */
     This.toElementInternal = function(element) {
 
         //  check value at 'if' attribute
@@ -85,7 +99,11 @@ Ejax.Binder = (function() {
     };
 
 
-    //  bind params to attributes of element
+    /**
+     * toAttributes
+     *   bind params to attributes of element
+     * @param {NamedNodeMap} attrs : atttribute collection (it can be get by Element.attribute)
+     */
     This.toAttributes = function(attrs) {
         if(!attrs) return null;
 
@@ -101,10 +119,13 @@ Ejax.Binder = (function() {
 
     };
 
-
-
-
-    //  bind params to child nodes in element
+    
+    /**
+     * toNodes
+     *   bind params to child nodes in element
+     *  
+     * @param {NodeList} nodes : list of nodes
+     */
     This.toNodes = function(nodes) {
         if(!nodes) return null;
 

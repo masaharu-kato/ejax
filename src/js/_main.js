@@ -1,20 +1,20 @@
 /*
- * 最初に実行されるJavaScript (_main.phpで読み込まれる)
+ *  Script in first
  */
 
 let main = null;
 let forms = {};
 
-//	ブラウザの戻る/進むが押されたときの処理
+//	when back / forward button on browser has pushed
 window.onpopstate = function(event){
 
-//	初回アクセス時
+//	when first access
     if(!event.state) return;
 
     main.setState(event.state.page, event.state.params);
 }
 
-//	ページ読み込み時の処理
+
 window.onload = function() {
 
     

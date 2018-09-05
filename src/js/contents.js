@@ -1,13 +1,20 @@
+/* class Contents */
 let Contents = function(elm, page, params){
 
 	let self = this;
 
 	this.data = {};
 
-	//	今の状態をブラウザに記録する
-	//	ブラウザ上のURLを更新し、履歴に追加する(戻る/進むボタンで遷移できるようにする)
+
+	/**
+	 * pushState
+	 *	 save the current state into browser
+	 *	 update the URL on the browser and push it to the history
+	 *   (this make it possible to transition with the back / forward button on browser)
+	 * 
+	 * @return {void}
+	 */
 	this.pushState = function() {
-	//	console.log('self.page: ', self.page);
 
 		let data_text = $.param(self.data);
 
@@ -18,31 +25,58 @@ let Contents = function(elm, page, params){
 
 	};
 
-//  差分パラメタを指定してコンテンツを実行する
-//	temp_diff_params: 一時的な差分パラメタ
-//	func_done: 完了時の関数
-    this.run = function(temp_page, temp_diff_params, func_done) {
 
-        return Ajax.load(
-			temp_page,
+//  差分パラメタを指定してコンテンツを実行する
+	/**
+	 * execute
+	 *   差分パラメタを指定してコンテンツを実行する
+	 * 
+	 * @param {string} page_to_run
+	 * 		: Page name to be execute
+	 * 
+	 * @param {Object.<string, string>} params_to_run
+	 * 		: List of parameters to be used for execution
+	 * 
+	 * @param {Function():void} func_done
+	 * 		: Proccessing to call after execution
+	 * 
+	 * @return {void}
+	 */
+    this.execute = function(page_to_exec, params_to_exec, func_after_exec) {
+
+        Ajax.load(
+			page_to_exec,
 			'POST',
-			$.extend(this.params.get(), temp_diff_params),
-			func_done
+			$.extend(this.params.get(), params_to_exec),
+			func_after_exec
 		);
 		
 	}.bind(this);
 
+
+	/**
+	 * setHTML
+	 * 
+	 * @param {string} : HTML markup text to set self content
+	 * @return {void}
+	 */
 	this.setHTML = function(data) {
-		return this.elm.innerHTML = data;
+		this.elm.innerHTML = data;
 	}.bind(this);
 
+
+	/**
+	 * apply
+	 * 
+	 * @return {void}
+	 */
 	this.apply = function() {
 
 	//	ブラウザ上のURL/履歴を変更
 		self.pushState();
 
 	//	AJAXで読み込む
-		return Ajax.load(
+		Ajax.load(
 			'/.ajax/'+self.page,
 			'POST',
 			self.data,
@@ -72,21 +106,49 @@ let Contents = function(elm, page, params){
 
 	};
 
+
+
+	/**
+	 * to
+	 *   go to new page with page name and difference parameter
+	 * 
+	 * @param {string} page : page name
+	 * @param {Object.<string, string>} diff_params : difference parameter
+	 * @return {void}
+	 */
 	this.to = function(page, diff_params) {
 		if(page !== null) self.page = page;
 		$.merge(self.data, diff_params);
-		return self.apply();
+		self.apply();
 	};
 	
-	this.setState = function(page, params) {
+
+	/**
+	 * setState
+	 *   go to new page with page name and full parameter
+	 * 
+	 * @param {string} page : page name
+	 * @param {Object.<string, string>} new_params : new full parameter
+	 * @return {void}
+	 */
+	this.setState = function(page, new_params) {
 		if(page !== null) self.page = page;
 		self.data = new_params;
-		return self.apply();
+		self.apply();
+	};
+	
+
+	/**
+	 * refresh
+	 *   refresh current page
+	 * 
+	 * @return {void}
+	 */
+	this.refresh = function() {
+		self.to(null, {});
 	};
 
-	this.refresh = function() {
-		return self.to(null, {});
-	};
+
 
 //	特定のページから離れた時の処理 (任意の処理を指定する)
 	this.unloadOf = function(pagename) {};

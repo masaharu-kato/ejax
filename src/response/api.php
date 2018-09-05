@@ -14,7 +14,7 @@ namespace Ejax\Response\API;
         list($real_path_data, $real_path, $src_path) = File\procRealPath(DAT_API_DIR, $rest_path);
         
     //  load script on path
-        include $src_path;
+        include $src_path.'.'.API_SRC_EXT;
 
     //  name of function
         $func = 'EjaxData\\API\\'.implode('\\', $real_path_data).'\\'.$method;

@@ -1,10 +1,16 @@
+/* class SForm */
 let SForm = function(options) {
 
     /* default message displayed when input has invalid value */
     const DEFAULT_INVALID_MESSAGE = '適切な値を入力してください。';
 
 
-    /* function for check validity on each input(s) */
+    /**
+     * checkValidityOf
+     *   function for check validity on each input(s)
+     * @param {HTMLFormElement} elm 
+     * @return {void}
+     */
     this.checkValidityOf = function(elm) {
         const self = this;
 
@@ -29,7 +35,12 @@ let SForm = function(options) {
     }
 
 
-    /* callback function for validity on each input(s) */
+    /**
+     * setValidationState
+     *   callback function for validity on each input(s)
+     * @param {HTMLFormElement} elm
+     * @return {void}
+     */
     this.setValidationState = function(elm) {
 
         /* if returns null or true or empty string, elm has not invalid values so release invalid state */
@@ -44,7 +55,12 @@ let SForm = function(options) {
     }
 
 
-    /* check validity of each inputs */
+    /**
+     * checkAllValidity
+     *   check validity of each inputs
+     * 
+     * @return {boolean} whether all of inputs have valid value or not
+     */
     this.checkAllValidity = function() {
         const f = this.elm_form;
 
@@ -58,7 +74,12 @@ let SForm = function(options) {
 
     
 
-    /* get form values with name key */
+    /**
+     * getValues
+     *   get form values with name key
+     * 
+     * @return {Object.<string, string>} list of values of all inputs in self form
+     */
     this.getValues = function() {
 
         let values = {};
@@ -70,7 +91,12 @@ let SForm = function(options) {
     };
 
 
-    /* set form values by array */
+    /**
+     * setValues
+     *   set form values by array
+     * 
+     * @param {Object.<string, string>} values : list of values of all inputs in self form 
+     */
     this.setValues = function(values) {
         this.elm_form.elements.forEach(function(elm){
             elm.value = values[elm.name];
@@ -78,7 +104,12 @@ let SForm = function(options) {
     };
 
 
-    /* submit form with ajax */
+    /**
+     * submit
+     *   submit form with ajax
+     * 
+     * @return {void}
+     */
     this.submit = function() {
 
         if(this.checkAllValidity()) {
@@ -120,7 +151,7 @@ let SForm = function(options) {
     let getValidateStatus = options.validate_function;
 
     /* element of edit form */
-    let 
+//    let 
 
     const self = this;
 

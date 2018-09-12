@@ -50,17 +50,28 @@
                 <dt class=$time>時間</dt>
                 <dd>$time</dd>
             </dl>
-            <dl foreach=$kinds>
+
+            @foreach $kinds
+            <dl>
                 <p>[$name]</p>
             </dl>
-            <dl foreach=$users>
+            @else
+            <p>種類はありません。</p>
+
+            @foreach $users
+            <dl>
                 <p>ユーザー名: $name</p>
                 <p>ユーザーID: $id</p>
                 <p>年齢: $age</p>
             </dl>
-            <dl if="$kind==1">
+            @else
+            <p>ユーザーはいません。</p>
+
+            @if($kind==1)
+            <dl>
                 kindは1です。
             </dl>
+
         </div>
     </div>
     <div id="output">
